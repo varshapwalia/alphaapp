@@ -1,11 +1,11 @@
-import 'package:app_flutter_project/models/news_model.dart';
+import 'package:app_flutter_project/data_mapper/news_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NewsDetails extends StatefulWidget {
-  NewsDetails({Key? key, required this.news}) : super(key: key);
+  const NewsDetails({Key? key, required this.news}) : super(key: key);
 
-  final News news;
+  final NewsModel news;
 
   @override
   _MyNewsDetailsState createState() => _MyNewsDetailsState();
@@ -21,7 +21,7 @@ class _MyNewsDetailsState extends State<NewsDetails> {
           elevation: 0.0,
           leading: GestureDetector(
               onTap: () => Navigator.pop(context),
-              child: Icon(Icons.close, color: Colors.grey,)),
+              child: const Icon(Icons.close, color: Colors.grey,)),
         ),
         body: Card(
             elevation: 2,
