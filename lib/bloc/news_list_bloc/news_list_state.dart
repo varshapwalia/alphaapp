@@ -1,7 +1,7 @@
 /*Developer Name - Navjyot Singh*/
 
 
-import 'package:app_flutter_project/data_mapper/news_model.dart';
+import 'package:alpha_app/data_mapper/news_model.dart';
 
 abstract class NewsListState {}
 

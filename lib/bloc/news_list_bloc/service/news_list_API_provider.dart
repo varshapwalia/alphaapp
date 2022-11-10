@@ -1,5 +1,4 @@
-import 'package:app_flutter_project/api/api_call.dart';
-import 'package:app_flutter_project/util/endpoints.dart';
+import 'package:alpha_app/util/endpoints.dart';
 import 'package:flutter/foundation.dart';
 
 /*Developer Name - Navjyot Singh*/

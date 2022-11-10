@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:app_flutter_project/bloc/news_list_bloc/service/news_list_API_provider.dart';
-import 'package:app_flutter_project/data_mapper/news_model.dart';
-import 'package:app_flutter_project/database/local_database.dart';
-import 'package:app_flutter_project/util/custom_exception.dart';
+import 'package:alpha_app/bloc/news_list_bloc/service/news_list_API_provider.dart';
+import 'package:alpha_app/data_mapper/news_model.dart';
+import 'package:alpha_app/database/local_database.dart';
+
 
 
 /*Developer Name - Navjyot Singh*/
@@ -18,7 +18,7 @@ class NewsListRepo {
     List<NewsModel> newsList;
 
     var data =
-        await _newsListApiProvider.getNewsList();
+    await _newsListApiProvider.getNewsList();
 
     var status = data['statusCode'];
 
@@ -28,12 +28,15 @@ class NewsListRepo {
       var output;
       if (data['result'] != null) output = json.decode(data['result'])['articles'];
 
+
       newsList = (output as List)
           .map((e) => NewsModel.fromJson(e))
           .toList();
-      db.initDb();
-      db.saveResponse();
 
+      db.saveResponse(newsList);
+      var result = db.getNewsData();
+
+      result.then((value) => print("value is "+value.toString()));
 
       return newsList;
     }

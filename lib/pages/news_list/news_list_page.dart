@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'package:app_flutter_project/bloc/news_list_bloc/news_list_bloc.dart';
-import 'package:app_flutter_project/bloc/news_list_bloc/news_list_event.dart';
-import 'package:app_flutter_project/bloc/news_list_bloc/repository/news_list_repo.dart';
-import 'package:app_flutter_project/pages/details/detail_page.dart';
-import 'package:app_flutter_project/util/endpoints.dart';
-import 'package:app_flutter_project/widgets/shimmer.dart';
-import 'package:app_flutter_project/widgets/status_500_card.dart';
+import 'package:alpha_app/bloc/news_list_bloc/news_list_bloc.dart';
+import 'package:alpha_app/bloc/news_list_bloc/news_list_event.dart';
+import 'package:alpha_app/bloc/news_list_bloc/repository/news_list_repo.dart';
+import 'package:alpha_app/pages/details/detail_page.dart';
+import 'package:alpha_app/widgets/shimmer.dart';
+import 'package:alpha_app/widgets/status_500_card.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

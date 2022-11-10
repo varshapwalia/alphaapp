@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:alpha_app/data_mapper/news_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'package:path/path.dart';
@@ -49,7 +52,7 @@ class TableDataGateway{
 
   void _onCreate(Database db, int version) async {
     await db.execute(
-        "CREATE TABLE news_list(id INTEGER PRIMARY KEY, url TEXT, response TEXT)");
+        "CREATE TABLE news_list(author TEXT, title TEXT, description TEXT, url TEXT, urlToImage TEXT, publishedAt TEXT, content TEXT,name TEXT)");
   }
 
   void createAdditionalRuntimeDB() async {
@@ -60,15 +63,30 @@ class TableDataGateway{
     var dbClient = db;
     await dbClient.rawQuery("DROP TABLE IF EXISTS news_list");
     await db.execute(
-        "CREATE TABLE news_list(id INTEGER PRIMARY KEY, url TEXT, response TEXT)");
+        "CREATE TABLE news_list(author TEXT, title TEXT, description TEXT, url TEXT, urlToImage TEXT, publishedAt TEXT, content TEXT,name TEXT)");
   }
 
-  void saveResponse() async {
+  void saveResponse(List<NewsModel> newsList) async {
+
     var dbClient = await db;
-    dbClient!.rawInsert('INSERT INTO news_list(id, url, response) VALUES(2,"Bob", "hello")') ;
-    print("called successfully");
+    try{
+      for (var element in newsList) {
+        String author = element.author.toString().replaceAll(RegExp('[^A-Za-z0-9,]'), '').replaceAll(":", "").replaceAll(",", "");
+        String title = element.title.toString().replaceAll(RegExp('[^A-Za-z0-9,]'), '').replaceAll(":", "").replaceAll(",", "");
+        String description = element.description.toString().replaceAll(RegExp('[^A-Za-z0-9,]'), '').replaceAll(":", "").replaceAll(",", "");
+        String content = element.content.toString().replaceAll(RegExp('[^A-Za-z0-9,]'), '').replaceAll(":", "").replaceAll(",", "");
+        String name = element.name.toString().replaceAll(RegExp('[^A-Za-z0-9,]'), '').replaceAll(":", "").replaceAll(",", "");
+        dbClient!.rawInsert('INSERT INTO news_list(author, title, description, url, urlToImage, publishedAt, content, name) VALUES( ${author}, ${title}, ${description}, ${element.url.toString()}, ${element.urlToImage.toString()}, ${element.publishedAt.toString()}, ${content}, ${name})') ;
+        print("We are here bro");
+      }
+    }catch(e){
+      print("exception si "+e.toString());
+    }
 
   }
+
+
+
 
   // Future<int> saveNewsData(NewsModel newsModel) async {
   //   var dbClient = await db;
@@ -77,29 +95,31 @@ class TableDataGateway{
   //   return res;
   // }
 
-  // Future getNewsData(String url) async {
-  //   var dbClient = await db;
-  //
-  //   //----------add table if not exists-------
-  //   await dbClient!.execute(
-  //       "CREATE TABLE IF NOT EXISTS dashboard_search_recent_table(id INTEGER PRIMARY KEY, url TEXT, response TEXT)");
-  //
-  //   List resposeList = await dbClient.rawQuery(
-  //       "SELECT * from dashboard_search_recent_table WHERE url = ?", [url]);
-  //   return resposeList.map((u) => NewsModel.map(u)).toList();
-  // }
+  Future getNewsData() async {
+    print("we are here baba");
+    var dbClient = await db;
+    List responseList =[];
+    try{
+      responseList = await dbClient!.rawQuery("SELECT * from news_list");
+    }catch(e){
+      print("e is is "+e.toString());
+    }
 
-  // Future<int> updateResponse(String url, String response, int time) async {
-  //   var dbClient = await db ;
-  //   return await dbClient!.update(
-  //       "urlresponse", {"response": response, "time": time},
-  //       where: "url = ?", whereArgs: [url]);
-  // }
+    // print("response list is "+responseList.toString());
+    return responseList;
+  }
 
-  // Future<int> deleteResponse(String url) async {
-  //   var dbClient = await db;
-  //   int res = await dbClient!
-  //       .delete("urlresponse", where: "url = ?", whereArgs: [url]);
-  //   return res;
-  // }
+// Future<int> updateResponse(String url, String response, int time) async {
+//   var dbClient = await db ;
+//   return await dbClient!.update(
+//       "urlresponse", {"response": response, "time": time},
+//       where: "url = ?", whereArgs: [url]);
+// }
+
+// Future<int> deleteResponse(String url) async {
+//   var dbClient = await db;
+//   int res = await dbClient!
+//       .delete("urlresponse", where: "url = ?", whereArgs: [url]);
+//   return res;
+// }
 }

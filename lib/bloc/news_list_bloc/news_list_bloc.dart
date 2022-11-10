@@ -1,5 +1,6 @@
-import 'package:app_flutter_project/bloc/news_list_bloc/repository/news_list_repo.dart';
-import 'package:app_flutter_project/util/custom_exception.dart';
+
+
+import 'package:alpha_app/bloc/news_list_bloc/repository/news_list_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'news_list_event.dart';

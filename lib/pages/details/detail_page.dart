@@ -1,9 +1,9 @@
-import 'package:app_flutter_project/data_mapper/news_model.dart';
+import 'package:alpha_app/data_mapper/news_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NewsDetails extends StatefulWidget {
-  const NewsDetails({Key? key, required this.news}) : super(key: key);
+  NewsDetails({Key? key, required this.news}) : super(key: key);
 
   final NewsModel news;
 

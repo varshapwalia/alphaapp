@@ -1,12 +1,5 @@
 import 'dart:async';
-import 'dart:collection';
-import 'dart:convert';
-import 'dart:io';
-import 'package:app_flutter_project/database/local_database.dart';
-import 'package:app_flutter_project/util/api_response_handler.dart';
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
-import 'package:http_parser/http_parser.dart';
 
 bool production = false;
 bool test = true;
