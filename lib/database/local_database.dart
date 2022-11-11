@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:alpha_app/data_mapper/news_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
@@ -25,8 +23,9 @@ class TableDataGateway{
   initDb() async {
     Database localDatabase;
     try {
+
       var databasesPath = await getDatabasesPath();
-      String path = join(databasesPath, "local_database.db");
+      String path = join(databasesPath, "local_database1.db");
 
       localDatabase = await openDatabase(
         path,
@@ -36,9 +35,9 @@ class TableDataGateway{
       );
     } catch (e) {
       var databasesPath = await getDatabasesPath();
-      await deleteDatabase(join(databasesPath, "local_database.db"));
+      await deleteDatabase(join(databasesPath, "local_database1.db"));
 
-      String path = join(databasesPath, "local_database.db");
+      String path = join(databasesPath, "local_database1.db");
       localDatabase = await openDatabase(
         path,
         version: 4,
@@ -51,8 +50,11 @@ class TableDataGateway{
   }
 
   void _onCreate(Database db, int version) async {
-    await db.execute(
-        "CREATE TABLE news_list(author TEXT, title TEXT, description TEXT, url TEXT, urlToImage TEXT, publishedAt TEXT, content TEXT,name TEXT)");
+    print("we are coming her ");
+    await db.execute("CREATE TABLE source(id INTEGER PRIMARY KEY AUTOINCREMENT,source_id TEXT, source_name TEXT)");
+    await db.execute("CREATE TABLE author(id INTEGER PRIMARY KEY AUTOINCREMENT, author_name TEXT,source_id INTEGER, FOREIGN KEY (source_id) REFERENCES source (id))");
+    await db.execute("CREATE TABLE news(id INTEGER PRIMARY KEY AUTOINCREMENT,source_id INTEGER, author_id INTEGER,title TEXT, description TEXT, url TEXT, urlToImage TEXT, publishedAt TEXT, content TEXT, FOREIGN KEY (source_id) REFERENCES source (id),  FOREIGN KEY (author_id) REFERENCES author (id))");
+    print("table created");
   }
 
   void createAdditionalRuntimeDB() async {
@@ -63,7 +65,7 @@ class TableDataGateway{
     var dbClient = db;
     await dbClient.rawQuery("DROP TABLE IF EXISTS news_list");
     await db.execute(
-        "CREATE TABLE news_list(author TEXT, title TEXT, description TEXT, url TEXT, urlToImage TEXT, publishedAt TEXT, content TEXT,name TEXT)");
+        "CREATE TABLE news_list(id TEXT PRIMARY KEY, author TEXT, title TEXT, description TEXT, url TEXT, urlToImage TEXT, publishedAt TEXT, content TEXT,name TEXT)");
   }
 
   void saveResponse(List<NewsModel> newsList) async {
@@ -71,55 +73,51 @@ class TableDataGateway{
     var dbClient = await db;
     try{
       for (var element in newsList) {
-        String author = element.author.toString().replaceAll(RegExp('[^A-Za-z0-9,]'), '').replaceAll(":", "").replaceAll(",", "");
-        String title = element.title.toString().replaceAll(RegExp('[^A-Za-z0-9,]'), '').replaceAll(":", "").replaceAll(",", "");
-        String description = element.description.toString().replaceAll(RegExp('[^A-Za-z0-9,]'), '').replaceAll(":", "").replaceAll(",", "");
-        String content = element.content.toString().replaceAll(RegExp('[^A-Za-z0-9,]'), '').replaceAll(":", "").replaceAll(",", "");
-        String name = element.name.toString().replaceAll(RegExp('[^A-Za-z0-9,]'), '').replaceAll(":", "").replaceAll(",", "");
-        dbClient!.rawInsert('INSERT INTO news_list(author, title, description, url, urlToImage, publishedAt, content, name) VALUES( ${author}, ${title}, ${description}, ${element.url.toString()}, ${element.urlToImage.toString()}, ${element.publishedAt.toString()}, ${content}, ${name})') ;
-        print("We are here bro");
+        String sourceId = element.source.id;
+        String sourceName = element.source.name;
+        String author = element.author.toString();
+        String description = element.description.toString();
+        String url = element.url.toString();
+        String urlToImage = element.urlToImage.toString();
+        String date = element.publishedAt.toString();
+        String content = element.content.toString();
+        String title = element.title.toString();
+
+        dbClient!.rawInsert('INSERT INTO source(source_id,source_name) VALUES("$sourceId","$sourceName")') ;
+        var result =await dbClient.rawQuery('SELECT last_insert_rowid()');
+        int lastSourceId =int.parse(result[0]['last_insert_rowid()'].toString()) ;
+        dbClient.rawInsert('INSERT INTO author(author_name,source_id) VALUES("$author",$lastSourceId)') ;
+        result =await dbClient.rawQuery('SELECT last_insert_rowid()');
+        int lastAuthorId =int.parse(result[0]['last_insert_rowid()'].toString()) ;
+        dbClient.rawInsert('INSERT INTO news(author_id,source_id, title, description, url, urlToImage, publishedAt, content) VALUES($lastAuthorId,$lastSourceId,"$title","$description","$url","$urlToImage","$date","$content")') ;
       }
     }catch(e){
       print("exception si "+e.toString());
     }
-
   }
 
-
-
-
-  // Future<int> saveNewsData(NewsModel newsModel) async {
-  //   var dbClient = await db;
-  //   int res =
-  //   await dbClient!.insert("customize_icons_table", newsModel.toMap());
-  //   return res;
-  // }
-
   Future getNewsData() async {
-    print("we are here baba");
     var dbClient = await db;
     List responseList =[];
     try{
-      responseList = await dbClient!.rawQuery("SELECT * from news_list");
+      responseList = await dbClient!.rawQuery("SELECT * FROM news INNER JOIN author ON news.author_id = author.id INNER JOIN source ON news.source_id = source.id");
     }catch(e){
       print("e is is "+e.toString());
     }
-
-    // print("response list is "+responseList.toString());
     return responseList;
   }
 
-// Future<int> updateResponse(String url, String response, int time) async {
-//   var dbClient = await db ;
-//   return await dbClient!.update(
-//       "urlresponse", {"response": response, "time": time},
-//       where: "url = ?", whereArgs: [url]);
-// }
 
-// Future<int> deleteResponse(String url) async {
-//   var dbClient = await db;
-//   int res = await dbClient!
-//       .delete("urlresponse", where: "url = ?", whereArgs: [url]);
-//   return res;
-// }
+  Future getNewsSearch(String searchString) async {
+    print("search strin gis $searchString");
+    var dbClient = await db;
+    List responseList =[];
+    try{
+      responseList = await dbClient!.rawQuery("SELECT * FROM news INNER JOIN author ON news.author_id = author.id INNER JOIN source ON news.source_id = source.id WHERE title LIKE '$searchString%'");
+    }catch(e){
+      print("e is is "+e.toString());
+    }
+    print("response search list is "+responseList.toString());
+    return responseList;
+  }
 }
