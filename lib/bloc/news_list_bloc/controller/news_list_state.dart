@@ -1,4 +1,5 @@
-import 'package:alpha_app/data_mapper/news_model.dart';
+
+import 'package:alpha_app/domain_object/news_model.dart';
 
 abstract class NewsListState {}
 

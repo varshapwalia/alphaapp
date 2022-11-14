@@ -1,9 +1,9 @@
-import 'package:alpha_app/bloc/news_list_bloc/repository/news_list_repo.dart';
+import 'package:alpha_app/bloc/news_list_bloc/controller/news_list_event.dart';
+import 'package:alpha_app/bloc/news_list_bloc/controller/news_list_state.dart';
+import 'package:alpha_app/bloc/news_list_bloc/data_mapper/news_list_repo.dart';
 import 'package:alpha_app/util/custom_exception.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'news_list_event.dart';
-import 'news_list_state.dart';
 
 class NewsListBloc
     extends Bloc<NewsListEvent, NewsListState> {

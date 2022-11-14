@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:alpha_app/bloc/news_list_bloc/service/news_list_API_provider.dart';
-import 'package:alpha_app/data_mapper/news_model.dart';
-import 'package:alpha_app/database/local_database.dart';
+import 'package:alpha_app/domain_object/news_list_API_provider.dart';
+import 'package:alpha_app/domain_object/news_model.dart';
+import 'package:alpha_app/table_data_gateway/local_database.dart';
 import 'package:alpha_app/util/custom_exception.dart';
 
 class NewsListRepo {

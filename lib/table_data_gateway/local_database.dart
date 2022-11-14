@@ -1,4 +1,4 @@
-import 'package:alpha_app/data_mapper/news_model.dart';
+import 'package:alpha_app/domain_object/news_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'package:path/path.dart';

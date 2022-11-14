@@ -1,7 +1,9 @@
-import 'package:alpha_app/bloc/news_list_bloc/news_list_bloc.dart';
-import 'package:alpha_app/bloc/news_list_bloc/news_list_event.dart';
-import 'package:alpha_app/bloc/news_list_bloc/repository/news_list_repo.dart';
-import 'package:alpha_app/pages/details/detail_page.dart';
+import 'package:alpha_app/bloc/news_list_bloc/controller/news_list_bloc.dart';
+import 'package:alpha_app/bloc/news_list_bloc/controller/news_list_event.dart';
+import 'package:alpha_app/bloc/news_list_bloc/controller/news_list_state.dart';
+import 'package:alpha_app/bloc/news_list_bloc/data_mapper/news_list_repo.dart';
+import 'package:alpha_app/domain_object/news_model.dart';
+import 'package:alpha_app/ui/details/detail_page.dart';
 import 'package:alpha_app/util/debouncer.dart';
 import 'package:alpha_app/widgets/shimmer.dart';
 import 'package:alpha_app/widgets/status_500_card.dart';
@@ -10,8 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../bloc/news_list_bloc/news_list_state.dart';
-import '../../data_mapper/news_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
