@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NewsDetails extends StatefulWidget {
-  NewsDetails({Key? key, required this.news}) : super(key: key);
+  const NewsDetails({Key? key, required this.news}) : super(key: key);
 
   final NewsModel news;
 
@@ -15,88 +15,94 @@ class _MyNewsDetailsState extends State<NewsDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          //title: Text(widget.news.title, style: GoogleFonts.lato(),),
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          leading: GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: const Icon(Icons.close, color: Colors.grey,)),
-        ),
-        body: Card(
-            elevation: 2,
-            child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  children: [
-                    widget.news.urlToImage == null
-                        ? Container()
-                        : Image.network(widget.news.urlToImage),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      widget.news.title,
-                      style: GoogleFonts.lato(fontSize: 21, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.radio,
-                              size: 20,
-                              color: Colors.grey.shade500,
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              widget.news.name,
-                              style: GoogleFonts.lato(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FontStyle.italic),
-                              maxLines: 2,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.calendar_today,
-                              color: Colors.grey.shade500,
-                              size: 20,
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              widget.news.publishedAt.split("T")[0],
-                              style: GoogleFonts.lato(
-                                  fontSize: 12, fontStyle: FontStyle.italic),
-                              maxLines: 2,
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    widget.news.description != null
-                        ? Text(widget.news.description,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        leading: GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: const Icon(
+              Icons.close,
+              color: Colors.grey,
+            )),
+      ),
+      body: Card(
+        elevation: 2,
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            children: [
+              widget.news.urlToImage == null
+                  ? Container()
+                  : Image.network(widget.news.urlToImage),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                widget.news.title,
+                style:
+                    GoogleFonts.lato(fontSize: 21, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.radio,
+                        size: 20,
+                        color: Colors.grey.shade500,
+                      ),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        widget.news.source.name,
                         style: GoogleFonts.lato(
-                            fontSize: 16, fontStyle: FontStyle.normal))
-                        : Container(),
-                  ],
-                ))));
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FontStyle.italic),
+                        maxLines: 2,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_today,
+                        color: Colors.grey.shade500,
+                        size: 20,
+                      ),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        widget.news.publishedAt.split("T")[0],
+                        style: GoogleFonts.lato(
+                            fontSize: 12, fontStyle: FontStyle.italic),
+                        maxLines: 2,
+                      )
+                    ],
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              widget.news.description != null
+                  ? Text(widget.news.description,
+                      style: GoogleFonts.lato(
+                          fontSize: 16, fontStyle: FontStyle.normal))
+                  : Container(),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

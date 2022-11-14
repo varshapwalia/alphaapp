@@ -92,7 +92,7 @@ class TableDataGateway{
         dbClient.rawInsert('INSERT INTO news(author_id,source_id, title, description, url, urlToImage, publishedAt, content) VALUES($lastAuthorId,$lastSourceId,"$title","$description","$url","$urlToImage","$date","$content")') ;
       }
     }catch(e){
-      print("exception si "+e.toString());
+      print("exception caught is "+e.toString());
     }
   }
 
@@ -102,22 +102,20 @@ class TableDataGateway{
     try{
       responseList = await dbClient!.rawQuery("SELECT * FROM news INNER JOIN author ON news.author_id = author.id INNER JOIN source ON news.source_id = source.id");
     }catch(e){
-      print("e is is "+e.toString());
+      print("exception caught is "+e.toString());
     }
     return responseList;
   }
 
 
   Future getNewsSearch(String searchString) async {
-    print("search strin gis $searchString");
     var dbClient = await db;
     List responseList =[];
     try{
       responseList = await dbClient!.rawQuery("SELECT * FROM news INNER JOIN author ON news.author_id = author.id INNER JOIN source ON news.source_id = source.id WHERE title LIKE '$searchString%'");
     }catch(e){
-      print("e is is "+e.toString());
+      print("exception caught is "+e.toString());
     }
-    print("response search list is "+responseList.toString());
     return responseList;
   }
 }

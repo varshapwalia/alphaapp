@@ -1,12 +1,9 @@
-
-
 import 'package:alpha_app/bloc/news_list_bloc/repository/news_list_repo.dart';
+import 'package:alpha_app/util/custom_exception.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'news_list_event.dart';
 import 'news_list_state.dart';
-
-/*Developer Name - Navjyot Singh*/
 
 class NewsListBloc
     extends Bloc<NewsListEvent, NewsListState> {
@@ -24,6 +21,17 @@ class NewsListBloc
 
         final results = await Future.wait([
           newsListRepo.fetchNewsList(),
+        ]);
+
+        yield NewsListFetchedState(
+          newsList: results[0],
+        );
+      }
+      if (event is SearchNewsListEvent) {
+        yield NewsListFetchingState();
+
+        final results = await Future.wait([
+          newsListRepo.searchNewsList(event.searchString),
         ]);
 
         yield NewsListFetchedState(

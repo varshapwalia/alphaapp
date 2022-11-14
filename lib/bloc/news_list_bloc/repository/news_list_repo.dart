@@ -3,22 +3,18 @@ import 'dart:convert';
 import 'package:alpha_app/bloc/news_list_bloc/service/news_list_API_provider.dart';
 import 'package:alpha_app/data_mapper/news_model.dart';
 import 'package:alpha_app/database/local_database.dart';
-
-
-
-/*Developer Name - Navjyot Singh*/
+import 'package:alpha_app/util/custom_exception.dart';
 
 class NewsListRepo {
   final NewsListAPIProvider _newsListApiProvider = NewsListAPIProvider();
 
   TableDataGateway db = TableDataGateway();
 
-//---------------fetching contact details here----------
+  //---------------fetching news here----------
   Future<List<NewsModel>> fetchNewsList() async {
     List<NewsModel> newsList;
 
-    var data =
-    await _newsListApiProvider.getNewsList();
+    var data = await _newsListApiProvider.getNewsList();
 
     var status = data['statusCode'];
 
@@ -26,19 +22,29 @@ class NewsListRepo {
 
     if (status == 200) {
       var output;
-      if (data['result'] != null) output = json.decode(data['result'])['articles'];
+      if (data['result'] != null) {
+        output = json.decode(data['result'])['articles'];
+      }
 
-
-      newsList = (output as List)
-          .map((e) => NewsModel.fromJson(e))
-          .toList();
+      newsList = (output as List).map((e) => NewsModel.fromJson(e)).toList();
 
       db.saveResponse(newsList);
-      var result = db.getNewsData();
+      List result = await db.getNewsData();
+      List<NewsModel> resultList = [];
+      List finalResult = queryToMap(result);
+      for (var element in finalResult) {
+        resultList.add(NewsModel(
+            Source(element['source_id'], element['source_name']),
+            element['author_name'],
+            element['title'],
+            element['description'],
+            element['url'],
+            element['urlToImage'],
+            element['publishedAt'],
+            element['content']));
+      }
 
-      result.then((value) => print("value is "+value.toString()));
-
-      return newsList;
+      return resultList;
     }
     //------is status is 400 throw this custom exception error------------
     else if (status == 400) {
@@ -65,6 +71,29 @@ class NewsListRepo {
       throw CustomException(0, 'Some unexpected error occurred');
     }
   }
+  
+  //---------------searching news here----------
+  Future<List<NewsModel>> searchNewsList(String searchString) async {
+    List result = await db.getNewsSearch(searchString);
+    List<NewsModel> resultList = [];
+    List finalResult = queryToMap(result);
+    for (var element in finalResult) {
+      resultList.add(NewsModel(
+          Source(element['source_id'], element['source_name']),
+          element['author_name'],
+          element['title'],
+          element['description'],
+          element['url'],
+          element['urlToImage'],
+          element['publishedAt'],
+          element['content']));
+    }
+    return resultList;
+  }
 
-
+  List queryToMap(var result) {
+    List x = [];
+    result.forEach((r) => x.add(Map<String, dynamic>.from(r)));
+    return x;
+  }
 }

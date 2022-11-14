@@ -1,6 +1,3 @@
-/*Developer Name - Navjyot Singh*/
-
-
 import 'package:alpha_app/data_mapper/news_model.dart';
 
 abstract class NewsListState {}
@@ -12,8 +9,6 @@ class NewsListFetchedState extends NewsListState {
 
   NewsListFetchedState(
       { this.newsList});
-
-
 }
 
 class NewsListErrorState extends NewsListState {
